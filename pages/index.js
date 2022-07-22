@@ -34,11 +34,22 @@ export default function Home(props) {
     async function setCoffeeStoresByLocation() {
       if (latLong) {
         try {
-          const response = await fetch(
+          let response = await fetch(
             `/api/getCoffeeStoreByLocation?latLong=${latLong}&limit=30`
           );
 
-          const coffeeStores = await response.json();
+          let coffeeStores = await response.json();
+
+          if (coffeeStores.length === 0) {
+            // dhaka lat long
+            const dhakaLatLong = '23.8103,90.4125';
+            response = await fetch(
+              `/api/getCoffeeStoreByLocation?latLong=${dhakaLatLong}&limit=30`
+            );
+
+            coffeeStores = await response.json();
+            // setCoffeeStoresError('No Coffee store found nearby you, Showing coffee stores in Dhaka');
+          }
 
           // setCoffeeStores(fetchedCoffeeStores);
           dispatch({
